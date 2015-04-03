@@ -1,6 +1,7 @@
 var node_mailer = require("nodemailer");
 var smtpTransport = require('nodemailer-smtp-transport');
 var logger = require("./logger");
+var config = require("./config");
 var mail_server = (function(){
 
     var that = this;
@@ -9,8 +10,8 @@ var mail_server = (function(){
         secure: true,
         port: 465,
         auth: {
-            user: "1193235126@qq.com",
-            pass: "Tju6qdiape"
+            user: config.mail_user,
+            pass: config.mail_passowrd
         },
         debug: true
 
