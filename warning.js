@@ -10,7 +10,7 @@ var warning = (function(){
 
     that.ping_server = function() {
 
-        var url = "http://" + test_ip + ":" + port + "/index";
+        var url = "http://" + server_ip + ":" + port + "/index";
         logger.info(url);
         request(url, function(error, response, body){
 
