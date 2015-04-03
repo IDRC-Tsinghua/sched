@@ -1,4 +1,4 @@
-var config = require("./config");
+var sched_config = require("./sched_config");
 var mysql = require("mysql");
 var logger = require("./logger");
 
@@ -8,12 +8,12 @@ var MysqlClient = (function(){
     that.conn = null;
     that.createConnection = function() {
         var conn = mysql.createConnection({
-            host: config.mysql_connect.host,
-            port: config.mysql_connect.port,
-            user: config.mysql_connect.user,
-            password: config.mysql_connect.password,
-            database: config.mysql_connect.database,
-            charset: config.mysql_connect.charset
+            host: sched_config.mysql_connect.host,
+            port: sched_config.mysql_connect.port,
+            user: sched_config.mysql_connect.user,
+            password: sched_config.mysql_connect.password,
+            database: sched_config.mysql_connect.database,
+            charset: sched_config.mysql_connect.charset
         });
         that.conn = conn;
         return that.conn;
