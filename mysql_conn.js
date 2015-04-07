@@ -2,10 +2,11 @@ var sched_config = require("./sched_config");
 var mysql = require("mysql");
 var logger = require("./logger");
 
-var MysqlClient = (function(){
+var mysql_conn = (function(){
 
     var that = this;
     that.conn = null;
+
     that.createConnection = function() {
         var conn = mysql.createConnection({
             host: sched_config.mysql_connect.host,
@@ -19,13 +20,28 @@ var MysqlClient = (function(){
         return that.conn;
     };
 
+    that.getAllUsers = function(callback) {
+
+        var _query = "SELECT * FROM UserInfo ";
+        conn.query(_query, [], function(err, rows, fields){
+
+            if(err) {
+                logger.info([err, "ERROR: getAllUsers"]);
+                callback(1, err);
+            } else {
+                callback(0, rows);
+            }
+
+        });
+    };
+
     that.getCountofValidByUser = function(keyword, username, callback) {
 
         var _query = "SELECT COUNT(id) as amount FROM ?? "
                 + " WHERE (user1 = ? or user2 = ? ) "
                 + " AND ( valid IS NOT NULL )";
 
-        conn.query(_query, [keyword, username], function(err, rows, fields){
+        conn.query(_query, [keyword, username, username], function(err, rows, fields){
             if(err) {
                 logger.info([err, "ERROR: getCountofValidByUser"]);
                 callback(1, "DB ERROR");
@@ -36,9 +52,26 @@ var MysqlClient = (function(){
         });
     };
 
-    return {
+    that.updateUserValidnum = function(username, validnum, callback) {
 
-        getCountofValidByUser: getCountofValidByUser
+        var _query = "UPDATE UserInfo SET validateCount = ? "
+                + " WHERE username = ? ";
+        conn.query(_query, [validnum, username], function(err, rows, fields){
+            if(err) {
+                logger.info([err, "ERROR: updateUserValidnum"]);
+                callback(1, "DB ERROR");
+            } else {
+                callback(0, "SUCCESS!");
+            }
+        });
+    };
+    return {
+        createConnection: createConnection,
+        getAllUsers: getAllUsers,
+        getCountofValidByUser: getCountofValidByUser,
+        updateUserValidnum: updateUserValidnum
     };
 
-});
+})();
+
+module.exports = mysql_conn;
